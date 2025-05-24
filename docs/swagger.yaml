@@ -1,0 +1,99 @@
+definitions:
+  handlers.AuthRequest:
+    description: Authentication request payload
+    properties:
+      name:
+        example: Иван
+        type: string
+      surname:
+        example: Иванов
+        type: string
+      university_number:
+        example: 182551
+        type: integer
+    required:
+    - name
+    - surname
+    - university_number
+    type: object
+  handlers.AuthResponce:
+    properties:
+      token:
+        example: a3eb9104-bc88-45b4-b250-87e2ba0b5e65
+        type: string
+    type: object
+  handlers.PressureResponse:
+    properties:
+      value:
+        example: 125
+        type: integer
+    type: object
+  handlers.TemperatureResponse:
+    properties:
+      value:
+        example: 42
+        type: integer
+    type: object
+info:
+  contact: {}
+  title: API для студентов (Data provider)
+  version: "1.0"
+paths:
+  /api/v1/auth:
+    post:
+      consumes:
+      - application/json
+      description: Авторизация/регистрация пользователя и получение токена
+      parameters:
+      - description: Auth credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.AuthResponce'
+      summary: Авторизация/регистрация пользователя
+      tags:
+      - Авторизация
+  /api/v1/pressure:
+    get:
+      description: Возвращает значение давления в Паскалях
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PressureResponse'
+      security:
+      - x-api-key: []
+      summary: Получить значение давления
+      tags:
+      - Данные
+  /api/v1/temperature:
+    get:
+      description: Возвращает значение температуры в градусах
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.TemperatureResponse'
+      security:
+      - x-api-key: []
+      summary: Получить значение температуры
+      tags:
+      - Данные
+securityDefinitions:
+  x-api-key:
+    in: header
+    name: x-api-key
+    type: apiKey
+swagger: "2.0"

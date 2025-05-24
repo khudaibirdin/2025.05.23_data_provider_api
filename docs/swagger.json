@@ -1,0 +1,153 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "API для студентов (Data provider)",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/auth": {
+            "post": {
+                "description": "Авторизация/регистрация пользователя и получение токена",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Авторизация/регистрация пользователя",
+                "parameters": [
+                    {
+                        "description": "Auth credentials",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.AuthRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.AuthResponce"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/pressure": {
+            "get": {
+                "security": [
+                    {
+                        "x-api-key": []
+                    }
+                ],
+                "description": "Возвращает значение давления в Паскалях",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Данные"
+                ],
+                "summary": "Получить значение давления",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.PressureResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/temperature": {
+            "get": {
+                "security": [
+                    {
+                        "x-api-key": []
+                    }
+                ],
+                "description": "Возвращает значение температуры в градусах",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Данные"
+                ],
+                "summary": "Получить значение температуры",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.TemperatureResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.AuthRequest": {
+            "description": "Authentication request payload",
+            "type": "object",
+            "required": [
+                "name",
+                "surname",
+                "university_number"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Иван"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Иванов"
+                },
+                "university_number": {
+                    "type": "integer",
+                    "example": 182551
+                }
+            }
+        },
+        "handlers.AuthResponce": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "example": "a3eb9104-bc88-45b4-b250-87e2ba0b5e65"
+                }
+            }
+        },
+        "handlers.PressureResponse": {
+            "type": "object",
+            "properties": {
+                "value": {
+                    "type": "integer",
+                    "example": 125
+                }
+            }
+        },
+        "handlers.TemperatureResponse": {
+            "type": "object",
+            "properties": {
+                "value": {
+                    "type": "integer",
+                    "example": 42
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "x-api-key": {
+            "type": "apiKey",
+            "name": "x-api-key",
+            "in": "header"
+        }
+    }
+}

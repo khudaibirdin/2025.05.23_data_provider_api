@@ -1,0 +1,43 @@
+@startuml IntercationScheme
+'https://plantuml.com/sequence-diagram
+
+autonumber
+skinparam maxMessageSize 200
+
+participant app as "Скрипт студента"
+participant api as "Data provider API"
+participant mqtt as "MQTT брокер"
+participant validator as "Скрипт проверки"
+
+app --> api: Запрос авторизации
+api --> api: Проверка запроса
+api --> app: Токен
+
+note over app, api
+    При запросах к данным
+    добавлять в заголовки
+    токен
+end note
+
+app --> api: Запрос данных /pressure
+api --> app: Давление
+app --> api: Запрос данных /temperature
+api --> app: Температура
+
+app --> mqtt: Передача показателей в топик DATA/
+mqtt --> validator: Передача показателей
+validator --> validator: Проверка правильности
+
+alt "Результат правильный"
+validator --> mqtt: Передача результата в топик RESULT/
+mqtt --> app: Передача результата слушателю mqtt
+end
+
+note right
+    Если структура
+    сообщения оформлена 
+    неверно, сообщение 
+    не будет сформировано
+end note
+
+@enduml
